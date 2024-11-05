@@ -21,22 +21,10 @@ router.post(
   AuthController.loginUser
 );
 
-// router.post(
-//   "/refresh-token",
-//   validateRequest(AuthValidation.refreshTokenValidationSchema),
-//   AuthController.refreshToken
-// );
-
-// router.post(
-//   "/forget-password",
-//   validateRequest(AuthValidation.forgetPasswordValidationSchema),
-//   AuthController.forgetPassword
-// );
-
-// router.post(
-//   "/reset-password",
-//   validateRequest(AuthValidation.resetPasswordValidationSchema),
-//   AuthController.resetPassword
-// );
+router.post(
+  "/refresh-token",
+  validateRequest(AuthValidation.refreshTokenValidationSchema),
+  AuthController.refreshToken
+);
 
 export const AuthRoutes = router;

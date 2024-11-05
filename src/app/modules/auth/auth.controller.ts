@@ -39,18 +39,18 @@ const loginUser = catchAsync(async (req, res) => {
   });
 });
 
-// const refreshToken = catchAsync(async (req, res) => {
-//   const { refreshToken } = req.cookies;
+const refreshToken = catchAsync(async (req, res) => {
+  const { refreshToken } = req.cookies;
 
-//   const result = await AuthServices.refreshToken(refreshToken);
+  const result = await AuthServices.refreshToken(refreshToken);
 
-//   sendResponse(res, {
-//     statusCode: httpStatus.OK,
-//     success: true,
-//     message: "Access token is retrieved succesfully!",
-//     data: result,
-//   });
-// });
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Access token is retrieved successfully!",
+    data: result,
+  });
+});
 
 // const forgetPassword = catchAsync(async (req, res) => {
 //   const { email } = req.body;
@@ -81,4 +81,5 @@ const loginUser = catchAsync(async (req, res) => {
 export const AuthController = {
   loginUser,
   registerUser,
+  refreshToken,
 };
