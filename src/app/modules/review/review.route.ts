@@ -16,6 +16,6 @@ router.post(
 
 router.get("/", ReviewController.getAllReview);
 
-router.get("/car-reviews/:carId", ReviewController.specificCarReview);
+router.get("/product-reviews/:productId", ReviewController.specificReview);
 
 export const ReviewRoutes = router;

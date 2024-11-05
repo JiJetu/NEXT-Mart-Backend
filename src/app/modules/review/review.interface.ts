@@ -2,8 +2,7 @@ import { Types } from "mongoose";
 
 export type TReview = {
   user: Types.ObjectId;
-  car: Types.ObjectId;
-  rating: number;
+  product: Types.ObjectId;
   userReview: string;
   createdAt?: Date;
   updatedAt?: Date;

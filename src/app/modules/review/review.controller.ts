@@ -4,11 +4,11 @@ import sendResponse from "../../utils/sendResponse";
 import { ReviewService } from "./review.service";
 
 const createReview = catchAsync(async (req, res) => {
-  const { bookingId, ...remainingData } = req.body;
+  const { productId, ...remainingData } = req.body;
   const user = req.user;
 
   const result = await ReviewService.createReviewIntoDB(
-    bookingId,
+    productId,
     remainingData,
     user
   );
@@ -22,7 +22,7 @@ const createReview = catchAsync(async (req, res) => {
 });
 
 const getAllReview = catchAsync(async (req, res) => {
-  const result = await ReviewService.getAllBookingFromDB();
+  const result = await ReviewService.getAllReviewFromDB();
 
   if (Object.keys(result).length <= 0) {
     return sendResponse(res, {
@@ -41,10 +41,10 @@ const getAllReview = catchAsync(async (req, res) => {
   });
 });
 
-const specificCarReview = catchAsync(async (req, res) => {
-  const { carId } = req.params;
+const specificReview = catchAsync(async (req, res) => {
+  const { productId } = req.params;
 
-  const result = await ReviewService.getSpecificCarReviewFromDB(carId);
+  const result = await ReviewService.getSpecificReviewFromDB(productId);
 
   if (Object.keys(result).length <= 0) {
     return sendResponse(res, {
@@ -66,5 +66,5 @@ const specificCarReview = catchAsync(async (req, res) => {
 export const ReviewController = {
   createReview,
   getAllReview,
-  specificCarReview,
+  specificReview,
 };

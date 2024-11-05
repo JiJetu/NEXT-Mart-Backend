@@ -8,20 +8,14 @@ const reviewSchema = new Schema<TReview>(
       ref: "User",
       required: true,
     },
-    car: {
+    product: {
       type: Schema.Types.ObjectId,
-      ref: "Car",
+      ref: "Product",
       required: true,
     },
     userReview: {
       type: String,
       required: true,
-    },
-    rating: {
-      type: Number,
-      required: true,
-      min: 1,
-      max: 5,
     },
   },
   {
