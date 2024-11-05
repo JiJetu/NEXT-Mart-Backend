@@ -33,11 +33,6 @@ const userSchema = new Schema<TUser, UserModel>(
       type: Boolean,
       default: true,
     },
-    // userImage: {
-    //   type: String,
-    //   default:
-    //     "https://i.ibb.co.com/6XKzKZ5/default-avatar-icon-of-social-media-user-vector.jpg",
-    // },
   },
   {
     timestamps: true,

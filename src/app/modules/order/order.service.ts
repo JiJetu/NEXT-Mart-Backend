@@ -12,9 +12,9 @@ import { JwtPayload } from "jsonwebtoken";
 const createOrder = async (orderData: Partial<TOrder>) => {
   const { user, products } = orderData;
 
-  const userExits = await User.findOne({ email: user?.email });
+  const userExists = await User.findOne({ email: user?.email });
 
-  if (!userExits) {
+  if (!userExists) {
     throw new AppError(httpStatus.NOT_FOUND, "user not found");
   }
 
@@ -38,7 +38,7 @@ const createOrder = async (orderData: Partial<TOrder>) => {
 
   const hash = crypto
     .createHash("sha256")
-    .update(userExits.email + Date.now().toString())
+    .update(userExists.email + Date.now().toString())
     .digest("hex")
     .slice(0, 10);
 
@@ -73,23 +73,36 @@ const createOrder = async (orderData: Partial<TOrder>) => {
 };
 
 const getAllOrders = async () => {
-  const result = await Order.find().populate("product");
+  const result = await Order.find().populate("products.product");
 
   return result;
 };
 
-const getMyOrders = async (user: JwtPayload) => {
-  const userExits = await User.findOne({ email: user?.email });
+const getMyOrders = async (userInfo: JwtPayload) => {
+  const userExists = await User.findOne({ email: userInfo?.email });
 
-  if (!userExits) {
+  if (!userExists) {
     throw new AppError(httpStatus.NOT_FOUND, "user not found");
   }
 
-  return await Order.find({ user.email: userExists._id }).populate("product");
+  return await Order.find({ "user.email": userExists.email }).populate(
+    "products.product"
+  );
+};
+
+const singleOrderInfo = async (orderId: string) => {
+  const order = await Order.findById(orderId).populate("products.product");
+
+  if (!order) {
+    throw new AppError(httpStatus.NOT_FOUND, "Order not found");
+  }
+
+  return order;
 };
 
 export const OrderService = {
   createOrder,
   getAllOrders,
   getMyOrders,
+  singleOrderInfo,
 };

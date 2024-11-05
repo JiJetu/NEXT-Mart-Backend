@@ -40,6 +40,11 @@ const OrderSchema = new Schema<TOrder>(
       type: Boolean,
       default: false,
     },
+    transactionId: {
+      type: String,
+      required: true,
+      unique: true,
+    },
   },
   {
     timestamps: true,

@@ -19,4 +19,6 @@ router.get("/", auth(UserRole.admin), OrderControllers.getAllOrders);
 
 router.get("/my-order", auth(UserRole.user), OrderControllers.getMyOrders);
 
+router.get("/:orderId", auth(UserRole.user), OrderControllers.singleOrderInfo);
+
 export const OrderRoutes = router;
