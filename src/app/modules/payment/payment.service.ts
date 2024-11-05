@@ -1,9 +1,9 @@
 import { readFileSync } from "fs";
 import { join } from "path";
-import { Booking } from "../booking/booking.model";
 import { verifyPayment } from "./payment.utils";
 import AppError from "../../errors/AppError";
 import httpStatus from "http-status";
+import { Order } from "../order/order.model";
 
 const confirmationService = async (transactionId: string, status: string) => {
   try {
@@ -12,13 +12,11 @@ const confirmationService = async (transactionId: string, status: string) => {
     let message = "";
 
     if (verifyResponse && verifyResponse.pay_status === "Successful") {
-      await Booking.findOneAndUpdate(
+      await Order.findOneAndUpdate(
         { transactionId },
         { paymentStatus: true, transactionId },
         { new: true }
-      )
-        .populate("user")
-        .populate("car");
+      ).populate("Product");
       message = "Successfully Paid!";
     } else {
       message = "Payment Failed!";

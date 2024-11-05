@@ -6,7 +6,6 @@ const ItemCategorySchema = new Schema<TCategory>(
     name: {
       type: String,
       required: true,
-      unique: true,
       trim: true,
     },
     description: {

@@ -1,4 +1,3 @@
-import bcrypt from "bcrypt";
 import httpStatus from "http-status";
 import config from "../../config";
 import AppError from "../../errors/AppError";
@@ -7,7 +6,6 @@ import { TUser } from "./../User/user.interface";
 import { TLogIn } from "./auth.interface";
 import { createToken, isPasswordMatch } from "./auth.utils";
 import jwt, { JwtPayload } from "jsonwebtoken";
-import { sendEmail } from "../../utils/sendEmail";
 
 const signUpIntoDB = async (payload: TUser, user: JwtPayload) => {
   const adminExists = await User.findOne({ email: user?.email });
@@ -67,6 +65,8 @@ const logInIntoDB = async (payload: TLogIn) => {
 
   const { password, ...remainingUserData } = userExists.toObject();
 
+  console.log(password);
+
   return {
     user: remainingUserData,
     refreshToken,
@@ -107,79 +107,77 @@ const refreshToken = async (token: string) => {
   };
 };
 
-const forgetPassword = async (email: string) => {
-  // checking if the user is exist
-  const user = await User.findOne({ email });
+// const forgetPassword = async (email: string) => {
+//   // checking if the user is exist
+//   const user = await User.findOne({ email });
 
-  if (!user) {
-    throw new AppError(httpStatus.NOT_FOUND, "This user is not found !");
-  }
+//   if (!user) {
+//     throw new AppError(httpStatus.NOT_FOUND, "This user is not found !");
+//   }
 
-  if (user?.isBlocked) {
-    throw new AppError(httpStatus.FORBIDDEN, "his user is blocked!");
-  }
+//   if (user?.isBlocked) {
+//     throw new AppError(httpStatus.FORBIDDEN, "his user is blocked!");
+//   }
 
-  const jwtPayload = {
-    email: user.email,
-    role: user.role,
-  };
+//   const jwtPayload = {
+//     email: user.email,
+//     role: user.role,
+//   };
 
-  const resetToken = createToken(
-    jwtPayload,
-    config.JWT_ACCESS_SECRET as string,
-    "10m"
-  );
+//   const resetToken = createToken(
+//     jwtPayload,
+//     config.JWT_ACCESS_SECRET as string,
+//     "10m"
+//   );
 
-  const resetUILink = `${config.reset_pass_ui_link}?email=${user.email}&token=${resetToken}`;
+//   const resetUILink = `${config.reset_pass_ui_link}?email=${user.email}&token=${resetToken}`;
 
-  sendEmail(user.email, resetUILink);
-  return;
-};
+//   sendEmail(user.email, resetUILink);
+//   return;
+// };
 
-const resetPassword = async (
-  payload: { email: string; newPassword: string },
-  token: string
-) => {
-  const user = await User.findOne({ email: payload.email });
-  if (!user) {
-    throw new AppError(httpStatus.NOT_FOUND, "This user is not found !");
-  }
+// const resetPassword = async (
+//   payload: { email: string; newPassword: string },
+//   token: string
+// ) => {
+//   const user = await User.findOne({ email: payload.email });
+//   if (!user) {
+//     throw new AppError(httpStatus.NOT_FOUND, "This user is not found !");
+//   }
 
-  if (user?.isBlocked) {
-    throw new AppError(httpStatus.FORBIDDEN, "his user is blocked!");
-  }
+//   if (user?.isBlocked) {
+//     throw new AppError(httpStatus.FORBIDDEN, "his user is blocked!");
+//   }
 
-  const decoded = jwt.verify(
-    token,
-    config.JWT_ACCESS_SECRET as string
-  ) as JwtPayload;
+//   const decoded = jwt.verify(
+//     token,
+//     config.JWT_ACCESS_SECRET as string
+//   ) as JwtPayload;
 
-  if (payload.email !== decoded.email) {
-    throw new AppError(httpStatus.FORBIDDEN, "You are forbidden!");
-  }
+//   if (payload.email !== decoded.email) {
+//     throw new AppError(httpStatus.FORBIDDEN, "You are forbidden!");
+//   }
 
-  //hash new password
-  const newHashedPassword = await bcrypt.hash(
-    payload.newPassword,
-    Number(config.salt_round)
-  );
+//   //hash new password
+//   const newHashedPassword = await bcrypt.hash(
+//     payload.newPassword,
+//     Number(config.salt_round)
+//   );
 
-  await User.findOneAndUpdate(
-    {
-      email: decoded.email,
-      role: decoded.role,
-    },
-    {
-      password: newHashedPassword,
-    }
-  );
-  return;
-};
+//   await User.findOneAndUpdate(
+//     {
+//       email: decoded.email,
+//       role: decoded.role,
+//     },
+//     {
+//       password: newHashedPassword,
+//     }
+//   );
+//   return;
+// };
 
 export const AuthServices = {
   signUpIntoDB,
   logInIntoDB,
   refreshToken,
-  forgetPassword,
-  resetPassword,
 };

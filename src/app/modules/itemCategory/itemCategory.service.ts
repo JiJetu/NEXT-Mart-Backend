@@ -3,8 +3,14 @@ import AppError from "../../errors/AppError";
 import { TCategory } from "./itemCategory.interface";
 import { ItemCategory } from "./itemCategory.model";
 
-const createCategory = async (categoryData: TCategory) => {
-  const category = await ItemCategory.create(categoryData);
+const createCategory = async (payload: TCategory) => {
+  const categoryExists = await ItemCategory.findOne({ name: payload.name });
+
+  if (categoryExists) {
+    throw new AppError(httpStatus.NOT_FOUND, "User is already exists");
+  }
+
+  const category = await ItemCategory.create(payload);
   return category;
 };
 
@@ -25,10 +31,10 @@ const getCategoryById = async (categoryId: string) => {
   return category;
 };
 
-const updateCategory = async (id: string, updateData: Partial<TCategory>) => {
+const updateCategory = async (id: string, payload: Partial<TCategory>) => {
   const category = await ItemCategory.findOneAndUpdate(
     { _id: id, isDeleted: false },
-    updateData,
+    payload,
     { new: true }
   );
 
