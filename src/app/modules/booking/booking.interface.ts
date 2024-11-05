@@ -4,7 +4,8 @@ export type TBooking = {
   startDate: string;
   expectedEndDate: string;
   user: Types.ObjectId;
-  car: Types.ObjectId;
+  product: Types.ObjectId;
+  category: Types.ObjectId;
   startTime: string;
   endDate: string;
   endTime: string;

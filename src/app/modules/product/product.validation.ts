@@ -5,7 +5,7 @@ const createProductValidationSchema = z.object({
     name: z.string({ required_error: "Product name is required" }),
     description: z.string({ required_error: "Description is required" }),
     price: z.number({ required_error: "Price is required" }).positive(),
-    stockQuantity: z.number().int().min(0).optional(),
+    stockQuantity: z.number().int().min(1).optional(),
     category: z.string({ required_error: "Category ID is required" }),
     images: z.array(z.string()).optional(),
   }),

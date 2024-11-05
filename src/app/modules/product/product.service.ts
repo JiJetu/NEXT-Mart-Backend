@@ -8,7 +8,7 @@ const createProduct = async (productData: TProduct) => {
   return product;
 };
 
-const getAllProducts = async (query: Record<string, unknown>) => {
+const getAllProducts = async () => {
   const products = await Product.find({ isDeleted: false })
     .populate("category")
     .exec();
